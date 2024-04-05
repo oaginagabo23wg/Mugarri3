@@ -4,9 +4,38 @@ import java.awt.*;
 public class Lehioa extends JFrame {
     public Lehioa(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(600,400));
+        setPreferredSize(new Dimension(650,600));
+        setLayout(null);
+
+        String[] irudiak = {"azeria.jpg", "parajea.jpg", "hostoa.jpg"};
+        JComboBox comboBox = new JComboBox(irudiak);
+        comboBox.setSelectedIndex(1);
+        comboBox.setBounds(20,20,200,50);
+        add(comboBox);
+
+        ImageIcon irudi = new ImageIcon(".\\irudiak\\azeria.jpg" );
+        JLabel arg = new JLabel();
+        arg.setBounds(20,80,250,300);
+        ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+        arg.setIcon(ikono);
+        add(arg);
+
+        JCheckBox checkBox = new JCheckBox("Save your comment");
+        checkBox.setBounds(40,380,150,50);
+        add(checkBox);
+
+        JTextField textField = new JTextField();
+        textField.setBounds(300,390,300,30);
+        add(textField);
+
+        JButton button = new JButton("Save");
+        button.setBounds(180,440,100,30);
+        add(button);
 
         pack();
         setVisible(true);
+    }
+    void kargatuCombo(){
+
     }
 }
