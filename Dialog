@@ -49,6 +49,7 @@ public class Dialog extends JDialog implements ActionListener {
 
             if (passwordField.getText().equals("damocles") ) {
                 new Lehioa();
+                setVisible(false);
             }
             else{
                 System.exit(0);
