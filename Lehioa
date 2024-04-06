@@ -1,24 +1,45 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Lehioa extends JFrame {
+    JLabel arg;
+    ImageIcon irudi;
     public Lehioa(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(650,600));
         setLayout(null);
 
-        String[] irudiak = {"azeria.jpg", "parajea.jpg", "hostoa.jpg"};
-        JComboBox comboBox = new JComboBox(irudiak);
-        comboBox.setSelectedIndex(1);
-        comboBox.setBounds(20,20,200,50);
-        add(comboBox);
-
-        ImageIcon irudi = new ImageIcon(".\\irudiak\\azeria.jpg" );
-        JLabel arg = new JLabel();
+        irudi = new ImageIcon(".\\irudiak\\azeria.jpg" );
+        arg = new JLabel();
         arg.setBounds(20,80,250,300);
         ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
         arg.setIcon(ikono);
         add(arg);
+
+        String[] irudiak = {"azeria.jpg", "parajea.jpg", "hostoa.jpg"};
+        JComboBox comboBox = new JComboBox(irudiak);
+        comboBox.setSelectedIndex(1);
+        comboBox.setBounds(20,20,200,50);
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (comboBox.getSelectedItem().equals("azeria.jpg")){
+                    comboEntzule(".\\irudiak\\azeria.jpg");
+                } else if(comboBox.getSelectedItem().equals("parajea.jpg")){
+                    comboEntzule(".\\irudiak\\parajea.jpg");
+                } else {
+                    comboEntzule(".\\irudiak\\hostoa.jpg");
+                }
+            }
+            private void comboEntzule(String s) {
+                irudi = new ImageIcon(s);
+                ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+                arg.setIcon(ikono);
+            }
+        });
+        add(comboBox);
 
         JCheckBox checkBox = new JCheckBox("Save your comment");
         checkBox.setBounds(40,380,150,50);
@@ -35,7 +56,5 @@ public class Lehioa extends JFrame {
         pack();
         setVisible(true);
     }
-    void kargatuCombo(){
 
-    }
 }
