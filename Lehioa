@@ -2,61 +2,92 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
-public class Dialog extends JDialog implements ActionListener {
-    JButton aceptar;
-    JButton cancelar;
-    JPasswordField passwordField;
-    void Dialog(){
-        JDialog dia = new JDialog();
+public class Lehioa extends JFrame {
+    JLabel arg;
+    ImageIcon irudi;
+    JTextField textField;
+    JButton button;
+    JCheckBox checkBox;
+    JButton itxi;
+    public Lehioa(){
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setPreferredSize(new Dimension(650,600));
         setLayout(null);
-        setBounds(400,10,500,200);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        ImageIcon galdera = new ImageIcon(".\\irudiak\\galdera.jpg" );
-        JLabel arg = new JLabel();
-        arg.setBounds(0,0,50,50);
-        ImageIcon ikono = new ImageIcon(galdera.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+        irudi = new ImageIcon(".\\irudiak\\azeria.jpg" );
+        arg = new JLabel();
+        arg.setBounds(10,80,250,300);
+        ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
         arg.setIcon(ikono);
         add(arg);
 
-        JLabel label1 = new JLabel("Input password");
-        label1.setBounds(60,10,100,30);
-        add(label1);
+        String[] irudiak = {"azeria", "parajea", "hostoa"};
+        JComboBox comboBox = new JComboBox(irudiak);
+        comboBox.setSelectedIndex(0);
+        comboBox.setBounds(20,20,200,50);
 
-        passwordField = new JPasswordField();
-        passwordField.setBounds(60,40,300,25);
-        add(passwordField);
-
-        aceptar = new JButton("Aceptar");
-        aceptar.setBounds(80, 70,100,30);
-        add(aceptar);
-        aceptar.addActionListener(this);
-
-        cancelar = new JButton("Cancelar");
-        cancelar.setBounds(200, 70,100,30);
-        add(cancelar);
-        cancelar.addActionListener(this);
-
-
-        setVisible(true);
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == aceptar){
-
-            if (passwordField.getText().equals("damocles") ) {
-                new Lehioa();
-                setVisible(false);
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pathImg = ".\\irudiak\\";
+                String irudia = pathImg.concat(comboBox.getSelectedItem().toString());
+                String jpg = irudia.concat(".jpg");
+                comboEntzule(jpg);
             }
-            else{
+            private void comboEntzule(String s) {
+                irudi = new ImageIcon(s);
+                ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+                arg.setIcon(ikono);
+            }
+        });
+        add(comboBox);
+
+        checkBox = new JCheckBox("Save your comment");
+        checkBox.setBounds(40,380,150,50);
+        add(checkBox);
+
+        textField = new JTextField();
+        textField.setBounds(300,390,300,30);
+        add(textField);
+
+        button = new JButton("Save");
+        button.setBounds(180,440,100,30);
+        add(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pathFitx = ".\\fitxategiak\\";
+                String fitx = pathFitx.concat(comboBox.getSelectedItem().toString());
+                String txt = fitx.concat(".txt");
+                if (checkBox.isSelected()) {
+                    try (FileWriter fw = new FileWriter(txt, true);
+                         BufferedWriter bw = new BufferedWriter(fw);
+                         PrintWriter out = new PrintWriter(bw);
+                    ) {
+                        out.println(textField.getText());
+                        //more code
+                    } catch (IOException ioe) {
+                        //exception handling left as an exercise for the reader
+                    }
+                }
+            }
+        });
+
+        itxi = new JButton("Itxi");
+        itxi.setBounds(300,440,100,30);
+        add(itxi);
+        itxi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,"Agur", "Agur!",JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
-        }
-        else{
-            System.exit(0);
-        }
+        });
+
+        pack();
+        setVisible(true);
     }
+
 }
