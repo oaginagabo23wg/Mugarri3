@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 
 public class Lehioa extends JFrame {
@@ -10,84 +9,101 @@ public class Lehioa extends JFrame {
     JTextField textField;
     JButton button;
     JCheckBox checkBox;
-    JButton itxi;
-    public Lehioa(){
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setPreferredSize(new Dimension(650,600));
-        setLayout(null);
+    JComboBox<String> comboBox;
 
-        irudi = new ImageIcon(".\\irudiak\\azeria.jpg" );
-        arg = new JLabel();
-        arg.setBounds(10,80,250,300);
-        ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
-        arg.setIcon(ikono);
-        add(arg);
+    public Lehioa() {
+        String pasahitza = JOptionPane.showInputDialog("Input password", JOptionPane.OK_CANCEL_OPTION);
+        if (pasahitza != null && pasahitza.equals("damocles")) {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setPreferredSize(new Dimension(650, 600));
+            setLayout(null);
 
-        String[] irudiak = {"azeria", "parajea", "hostoa"};
-        JComboBox comboBox = new JComboBox(irudiak);
-        comboBox.setSelectedIndex(0);
-        comboBox.setBounds(20,20,200,50);
+            irudi = new ImageIcon(".\\irudiak\\azeria.jpg");
+            arg = new JLabel();
+            arg.setBounds(10, 80, 250, 300);
+            ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+            arg.setIcon(ikono);
+            add(arg);
 
-        comboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String pathImg = ".\\irudiak\\";
-                String irudia = pathImg.concat(comboBox.getSelectedItem().toString());
-                String jpg = irudia.concat(".jpg");
-                comboEntzule(jpg);
+            File irudiakKarp = new File(".\\irudiak\\");
+            File[] irudiak= irudiakKarp.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jpg");
+                }
+            });
+
+            String[] irudiakNames = new String[irudiak.length];
+            for (int i = 0; i < irudiak.length; i++) {
+                irudiakNames[i] = irudiak[i].getName().replace(".jpg", "");
             }
-            private void comboEntzule(String s) {
-                irudi = new ImageIcon(s);
-                ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
-                arg.setIcon(ikono);
-            }
-        });
-        add(comboBox);
 
-        checkBox = new JCheckBox("Save your comment");
-        checkBox.setBounds(40,380,150,50);
-        add(checkBox);
+            comboBox = new JComboBox<>(irudiakNames);
+            comboBox.setSelectedIndex(0);
+            comboBox.setBounds(20, 20, 200, 50);
 
-        textField = new JTextField();
-        textField.setBounds(300,390,300,30);
-        add(textField);
+            comboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String pathImg = ".\\irudiak\\";
+                    String irudia = pathImg.concat(comboBox.getSelectedItem().toString());
+                    String jpg = irudia.concat(".jpg");
+                    comboEntzule(jpg);
+                }
 
-        button = new JButton("Save");
-        button.setBounds(180,440,100,30);
-        add(button);
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String pathFitx = ".\\fitxategiak\\";
-                String fitx = pathFitx.concat(comboBox.getSelectedItem().toString());
-                String txt = fitx.concat(".txt");
-                if (checkBox.isSelected()) {
-                    try (FileWriter fw = new FileWriter(txt, true);
-                         BufferedWriter bw = new BufferedWriter(fw);
-                         PrintWriter out = new PrintWriter(bw);
-                    ) {
-                        out.println(textField.getText());
-                        //more code
-                    } catch (IOException ioe) {
-                        //exception handling left as an exercise for the reader
+                private void comboEntzule(String s) {
+                    irudi = new ImageIcon(s);
+                    ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
+                    arg.setIcon(ikono);
+                }
+            });
+            add(comboBox);
+
+            checkBox = new JCheckBox("Save your comment");
+            checkBox.setBounds(40, 380, 150, 50);
+            add(checkBox);
+
+            textField = new JTextField();
+            textField.setBounds(300, 390, 300, 30);
+            add(textField);
+
+            button = new JButton("Save");
+            button.setBounds(180, 440, 100, 30);
+            add(button);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String pathFitx = ".\\fitxategiak\\";
+                    String fitx = pathFitx.concat(comboBox.getSelectedItem().toString());
+                    String txt = fitx.concat(".txt");
+                    if (checkBox.isSelected()) {
+                        try (FileWriter fw = new FileWriter(txt, true);
+                             BufferedWriter bw = new BufferedWriter(fw);
+                             PrintWriter out = new PrintWriter(bw);
+                        ) {
+                            out.println(textField.getText());
+                            //more code
+                        } catch (IOException ioe) {
+                            //exception handling left as an exercise for the reader
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        itxi = new JButton("Itxi");
-        itxi.setBounds(300,440,100,30);
-        add(itxi);
-        itxi.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,"Agur", "Agur!",JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
-            }
-        });
-
-        pack();
-        setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    JOptionPane.showMessageDialog(null, "Agur", "Agur!", JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
+            pack();
+            setVisible(true);
+        } else {
+            System.exit(0);
+        }
     }
 
+    public static void main(String[] args) {
+        new Lehioa();
+    }
 }
