@@ -15,15 +15,20 @@ public class Lehioa extends JFrame {
         String pasahitza = JOptionPane.showInputDialog("Input password", JOptionPane.OK_CANCEL_OPTION);
         if (pasahitza != null && pasahitza.equals("damocles")) {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setPreferredSize(new Dimension(650, 600));
-            setLayout(null);
+            setPreferredSize(new Dimension(650, 500));
+            setLayout(new BorderLayout());
+
+            JPanel ezker = new JPanel();
+            ezker.setLayout(new BoxLayout(ezker, BoxLayout.Y_AXIS));
+            add(ezker, BorderLayout.WEST);
+
 
             irudi = new ImageIcon(".\\irudiak\\azeria.jpg");
             arg = new JLabel();
             arg.setBounds(10, 80, 250, 300);
             ImageIcon ikono = new ImageIcon(irudi.getImage().getScaledInstance(arg.getWidth(), arg.getHeight(), Image.SCALE_DEFAULT));
             arg.setIcon(ikono);
-            add(arg);
+
 
             File irudiakKarp = new File(".\\irudiak\\");
             File[] irudiak= irudiakKarp.listFiles(new FilenameFilter() {
@@ -38,10 +43,11 @@ public class Lehioa extends JFrame {
                 irudiakNames[i] = irudiak[i].getName().replace(".jpg", "");
             }
 
+            JPanel comBox = new JPanel();
             comboBox = new JComboBox<>(irudiakNames);
             comboBox.setSelectedIndex(0);
-            comboBox.setBounds(20, 20, 200, 50);
-
+            comboBox.setPreferredSize(new Dimension(250,50));
+            comBox.add(comboBox);
             comboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -57,19 +63,27 @@ public class Lehioa extends JFrame {
                     arg.setIcon(ikono);
                 }
             });
-            add(comboBox);
 
+            ezker.add(comBox);
+            ezker.add(arg);
             checkBox = new JCheckBox("Save your comment");
-            checkBox.setBounds(40, 380, 150, 50);
-            add(checkBox);
+            ezker.add(checkBox);
+
 
             textField = new JTextField();
-            textField.setBounds(300, 390, 300, 30);
-            add(textField);
+            JPanel textFieldPanel = new JPanel();
+            JPanel hutsunea = new JPanel();
+            hutsunea.setPreferredSize(new Dimension(100,360));
+            textFieldPanel.add(hutsunea);
+            textFieldPanel.add(textField);
+            textField.setPreferredSize(new Dimension(220, 30)); // Establecer el tamaño deseado para el JTextField
+            add(textFieldPanel, BorderLayout.CENTER);
 
+            JPanel save = new JPanel();
             button = new JButton("Save");
-            button.setBounds(180, 440, 100, 30);
-            add(button);
+            button.setPreferredSize(new Dimension(70,40));
+            add(save,BorderLayout.SOUTH);
+            save.add(button);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -82,9 +96,8 @@ public class Lehioa extends JFrame {
                              PrintWriter out = new PrintWriter(bw);
                         ) {
                             out.println(textField.getText());
-                            //more code
                         } catch (IOException ioe) {
-                            //exception handling left as an exercise for the reader
+                            ioe.printStackTrace();
                         }
                     }
                 }
